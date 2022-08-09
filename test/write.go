@@ -3,26 +3,36 @@ package test
 import (
 	"encoding/json"
 	"io/ioutil"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
-type Message struct {
-	ID    int    `json:ID`
-	Email string `json:"Email"`
-	Text  string `json:"Text"`
+type file_Message struct {
+	Id   int    `json:id`
+	Text string `json:"text"`
 }
 
 var num = 0
 
-func json_write(email string, text string) {
+func Json_write(app *gin.Context) {
+	var file_Messages []file_Message
+	var post_Messages file_Message
+
+	if err := app.BindJSON(&post_Messages); err != nil {
+		app.IndentedJSON(http.StatusCreated, gin.H{"message": "not json type "})
+	}
+
 	bytes, _ := ioutil.ReadFile("1.json")
 
-	var Messages []Message
-	json.Unmarshal([]byte(bytes), &Messages)
+	json.Unmarshal([]byte(bytes), &file_Messages)
 
-	messages := append(Messages, Message{num, email, text})
+	messages := append(file_Messages, file_Message{num, string(post_Messages.Text)})
+
 	data, _ := json.Marshal(messages)
 
 	_ = ioutil.WriteFile("1.json", data, 0)
-	num += 1
 
+	num += 1
+	app.IndentedJSON(http.StatusCreated, gin.H{"message": "clear"})
 }
