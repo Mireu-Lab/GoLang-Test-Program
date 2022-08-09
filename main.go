@@ -1,10 +1,11 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
 
-func json_read() []byte {
-	test_read()
-	return
+func json_read(app *gin.Context) {
+	app.JSON(200, test.read.json_read())
 }
 
 func json_write(email string, text string) string {
@@ -13,9 +14,9 @@ func json_write(email string, text string) string {
 }
 
 func main() {
-	r := gin.Default()
+	app := gin.Default()
 
-	r.GET("/")
+	app.GET("/", json_read())
 
-	r.Run(":8080")
+	app.Run(":8080")
 }
