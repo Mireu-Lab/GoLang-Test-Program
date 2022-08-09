@@ -16,6 +16,7 @@ func json_write(email string, text string) string {
 func main() {
 	app := gin.Default()
 
+	// app.GET("/")
 	app.GET("/", json_read())
 
 	app.Run(":8080")
